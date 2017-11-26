@@ -17,7 +17,8 @@ void outputGeneralData(uint16 bus, uint16 device, uint16 function, uint32 regDat
 inline void outputVendorData(uint16 vendorID);
 inline void outputDeviceData(uint16 vendorID, uint16 deviceID);
 void outputClassCodeData(uint32 regData);
-void outputIORegisters(uint32 regData);
+void outputIOLimitBaseData(uint32 regData);
+void outputMemoryData(uint32 regData);
 void outputInterruptPinData(uint32 regData);
 void outputInterruptLineData(uint32 regData);
 inline void outputFullBusNumberData(uint32 regData);
@@ -92,12 +93,13 @@ void processDevice(uint16 bus, uint16 device, uint16 function)
         outputGeneralData(bus, device, function, idRegData);
 
         if (isBridge(bus, device, function)) {
-            fprintf(out, "Is bridge: yes\n");
+            fprintf(out, "\nIs bridge: yes\n\n");
             outputClassCodeData(readRegister(bus, device, function, CLASS_CODE_REGISTER));
             outputFullBusNumberData(readRegister(bus, device, function, BUS_NUMBER_REGISTER));
-            outputIORegisters(readRegister(bus, device, function, IO_DATA_REGISTER));
+            outputIOLimitBaseData(readRegister(bus, device, function, IO_DATA_REGISTER));
+            outputMemoryData(readRegister(bus, device, function, MEMORY_DATA_REGISTER));
         } else {
-            fprintf(out, "Is bridge: no\n");
+            fprintf(out, "\nIs bridge: no\n\n");
             outputClassCodeData(readRegister(bus, device, function, CLASS_CODE_REGISTER));
         }
         outputInterruptPinData(readRegister(bus, device, function, INTERRUPT_PIN_REGISTER));
@@ -175,19 +177,27 @@ void outputClassCodeData(uint32 regData)
     uint8 subclass = (classCode >> SUBCLASS_SHIFT) & 0xFF;
     uint8 srlProgrammingInterface = classCode & 0xFF;
 
-    fprintf(out, "Class code: %#X\n", classCode);
-    fprintf(out, "Base class: %#X %s\n", baseClass, getBaseClassData(baseClass));
-    fprintf(out, "Subclass: %#X %s\n", subclass, getSubclassData(subclass));
-    fprintf(out, "Specific register level programming interface: %#X %s\n",
+    fprintf(out, "Class code: %#x\n", classCode);
+    fprintf(out, "Base class: %#x %s\n", baseClass, getBaseClassData(baseClass));
+    fprintf(out, "Subclass: %#x %s\n", subclass, getSubclassData(subclass));
+    fprintf(out, "Specific register level programming interface: %#x %s\n",
             srlProgrammingInterface, getSRLProgrammingInterfaceData(srlProgrammingInterface));
 }
 
-void outputIORegisters(uint32 regData)
+void outputIOLimitBaseData(uint32 regData)
 {
     uint8 IOBase = regData & 0xFF;
     uint8 IOLimit = (regData >> IO_LIMIT_SHIFT) & 0xFF;
-    printf("I/O Base: %#X\n", IOBase);
-    printf("I/O Limit: %#X\n", IOLimit);
+    printf("I/O Base: %#x\n", IOBase);
+    printf("I/O Limit: %#x\n", IOLimit);
+}
+
+void outputMemoryData(uint32 regData)
+{
+    uint16 memoryBase = regData & 0xFFFF;
+    uint16 memoryLimit = (regData >> MEMORY_LIMIT_SHIFT) & 0xFFFF;
+    printf("Memory base: %#x\n", memoryBase);
+    printf("Memory limit: %#x\n", memoryLimit);
 }
 
 char *getBaseClassData(uint8 baseClass)
