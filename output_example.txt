@@ -2,115 +2,255 @@
 0:0:0
 Vendor ID: 8086, Intel Corporation
 Device ID: 29A0, 82P965/G965 Memory Controller Hub
+
 Is bridge: no
+
+Class code: 0x60000
+Base class: 0 Pre-2.0 PCI Specification Device
+Subclass: 0x6 Host/PCI
+Specific register level programming interface: 0 
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: not used
 Interrupt line: IRQ0
 -------------------------
 0:1:0
 Vendor ID: 8086, Intel Corporation
 Device ID: 2981, 82G35 Express PCI Express Root Port
+
 Is bridge: yes
-Primary bus number: #60
-Secondary bus number: #70
-Subordinate bus number: #0
+
+Class code: 0x60401
+Base class: 0x4 Multimedia Device
+Subclass: 0x6 Host/PCI
+Specific register level programming interface: 0x1 8514
+Primary bus number: #0
+Secondary bus number: #1
+Subordinate bus number: #1
+I/O Base: 0x60
+I/O Limit: 0x70
+Memory base: 0xe200
+Memory limit: 0xedf0
+Interrupt pin: not used
+Interrupt line: IRQ0
 -------------------------
 0:3:0
 Vendor ID: 1AB8, Parallels, Inc.
 Device ID: 4000, Virtual Machine Communication Interface
+
 Is bridge: no
+
+Class code: 0xff0000
+Base class: 0 Pre-2.0 PCI Specification Device
+Subclass: 0xff Device Does Not Fit In Class Codes
+Specific register level programming interface: 0 
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: INTA#
 Interrupt line: IRQ11
 -------------------------
 0:5:0
 Vendor ID: 1AF4, Red Hat, Inc.
 Device ID: 1000, Virtio network device
+
 Is bridge: no
+
+Class code: 0x20000
+Base class: 0 Pre-2.0 PCI Specification Device
+Subclass: 0x2 Ethernet
+Specific register level programming interface: 0 
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: INTA#
 Interrupt line: IRQ7
 -------------------------
 0:A:0
 Vendor ID: 1011, Digital Equipment Corporation
 Device ID: 0022, DECchip 21150
+
 Is bridge: yes
-Primary bus number: #90
-Secondary bus number: #A0
-Subordinate bus number: #80
+
+Class code: 0x60400
+Base class: 0x4 Multimedia Device
+Subclass: 0x6 Host/PCI
+Specific register level programming interface: 0 
+Primary bus number: #0
+Secondary bus number: #2
+Subordinate bus number: #2
+I/O Base: 0x90
+I/O Limit: 0xa0
+Memory base: 0xee10
+Memory limit: 0xef00
+Interrupt pin: not used
+Interrupt line: IRQ0
 -------------------------
 0:E:0
 Vendor ID: 1AF4, Red Hat, Inc.
 Device ID: 1002, Virtio memory balloon
+
 Is bridge: no
+
+Class code: 0x50000
+Base class: 0 Pre-2.0 PCI Specification Device
+Subclass: 0x5 RAM
+Specific register level programming interface: 0 
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: INTB#
 Interrupt line: IRQ11
 -------------------------
 0:1D:0
 Vendor ID: 8086, Intel Corporation
 Device ID: 2658, 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB UHCI #1
+
 Is bridge: no
+
+Class code: 0xc0300
+Base class: 0x3 Display Controller
+Subclass: 0xc Firewire (IEEE 1394)
+Specific register level programming interface: 0 
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: INTC#
 Interrupt line: IRQ9
 -------------------------
 0:1D:6
 Vendor ID: 1033, NEC Corporation
 Device ID: 0194, uPD720200 USB 3.0 Host Controller
+
 Is bridge: no
+
+Class code: 0xc0330
+Base class: 0x3 Display Controller
+Subclass: 0xc Firewire (IEEE 1394)
+Specific register level programming interface: 0x30 
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: INTA#
 Interrupt line: IRQ9
 -------------------------
 0:1D:7
 Vendor ID: 8086, Intel Corporation
 Device ID: 265C, 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB2 EHCI Controller
+
 Is bridge: no
+
+Class code: 0xc0320
+Base class: 0x3 Display Controller
+Subclass: 0xc Firewire (IEEE 1394)
+Specific register level programming interface: 0x20 
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: INTD#
 Interrupt line: IRQ9
 -------------------------
 0:1E:0
 Vendor ID: 8086, Intel Corporation
 Device ID: 244E, 82801 PCI Bridge
+
 Is bridge: yes
-Primary bus number: #C0
-Secondary bus number: #D0
-Subordinate bus number: #80
+
+Class code: 0x60400
+Base class: 0x4 Multimedia Device
+Subclass: 0x6 Host/PCI
+Specific register level programming interface: 0 
+Primary bus number: #0
+Secondary bus number: #3
+Subordinate bus number: #3
+I/O Base: 0xc0
+I/O Limit: 0xd0
+Memory base: 0xef20
+Memory limit: 0xf010
+Interrupt pin: not used
+Interrupt line: IRQ0
 -------------------------
 0:1F:0
 Vendor ID: 8086, Intel Corporation
 Device ID: 2810, 82801HB/HR (ICH8/R) LPC Interface Controller
+
 Is bridge: no
+
+Class code: 0x60100
+Base class: 0x1 Mass Storage Controller
+Subclass: 0x6 Host/PCI
+Specific register level programming interface: 0 
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: not used
 Interrupt line: IRQ0
 -------------------------
 0:1F:1
 Vendor ID: 8086, Intel Corporation
 Device ID: 244B, 82801BA IDE U100 Controller
+
 Is bridge: no
+
+Class code: 0x10180
+Base class: 0x1 Mass Storage Controller
+Subclass: 0x1 SCSI
+Specific register level programming interface: 0x80 (null)
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: not used
 Interrupt line: IRQ0
 -------------------------
 0:1F:2
 Vendor ID: 8086, Intel Corporation
 Device ID: 2821, 82801HR/HO/HH (ICH8R/DO/DH) 6 port SATA Controller [AHCI mode]
+
 Is bridge: no
+
+Class code: 0x10601
+Base class: 0x6 Bridge Device
+Subclass: 0x1 SCSI
+Specific register level programming interface: 0x1 8514
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: INTA#
 Interrupt line: IRQ10
 -------------------------
 0:1F:3
 Vendor ID: 8086, Intel Corporation
 Device ID: 283E, 82801H (ICH8 Family) SMBus Controller
+
 Is bridge: no
+
+Class code: 0xc0500
+Base class: 0x5 Memory Controller
+Subclass: 0xc Firewire (IEEE 1394)
+Specific register level programming interface: 0 
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: not used
 Interrupt line: IRQ0
 -------------------------
 0:1F:4
 Vendor ID: 8086, Intel Corporation
 Device ID: 2445, 82801BA/BAM AC'97 Audio Controller
+
 Is bridge: no
+
+Class code: 0x40100
+Base class: 0x1 Mass Storage Controller
+Subclass: 0x4 Video
+Specific register level programming interface: 0 
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: INTB#
 Interrupt line: IRQ11
 -------------------------
 1:0:0
 Vendor ID: 1AB8, Parallels, Inc.
 Device ID: 4005, Accelerated Virtual Video Adapter
+
 Is bridge: no
+
+Class code: 0x30000
+Base class: 0 Pre-2.0 PCI Specification Device
+Subclass: 0x3 PC Compatible
+Specific register level programming interface: 0 
+Cache line size: 0
+Expansion ROM base address: address space is disabled
 Interrupt pin: INTA#
 Interrupt line: IRQ10
 -------------------------
