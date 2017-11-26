@@ -20,6 +20,7 @@ void outputClassCodeData(uint32 regData);
 void outputCacheLineSizeData(uint32 regData);
 void outputIOLimitBaseData(uint32 regData);
 void outputMemoryData(uint32 regData);
+void outputExpansionROMBaseAddress(uint32 regData);
 void outputInterruptPinData(uint32 regData);
 void outputInterruptLineData(uint32 regData);
 void outputFullBusNumberData(uint32 regData);
@@ -103,6 +104,7 @@ void processDevice(uint16 bus, uint16 device, uint16 function)
             fprintf(out, "\nIs bridge: no\n\n");
             outputClassCodeData(readRegister(bus, device, function, CLASS_CODE_REGISTER));
             outputCacheLineSizeData(readRegister(bus, device, function, CACHE_LINE_SIZE_REGISTER));
+            outputExpansionROMBaseAddress(readRegister(bus, device, function, EXPANSION_ROM_BASE_ADDRESS_REGISTER));
         }
         outputInterruptPinData(readRegister(bus, device, function, INTERRUPT_PIN_REGISTER));
         outputInterruptLineData(readRegister(bus, device, function, INTERRUPT_LINE_REGISTER));
@@ -196,16 +198,16 @@ void outputIOLimitBaseData(uint32 regData)
 {
     uint8 IOBase = regData & 0xFF;
     uint8 IOLimit = (regData >> IO_LIMIT_SHIFT) & 0xFF;
-    printf("I/O Base: %#x\n", IOBase);
-    printf("I/O Limit: %#x\n", IOLimit);
+    fprintf(out, "I/O Base: %#x\n", IOBase);
+    fprintf(out, "I/O Limit: %#x\n", IOLimit);
 }
 
 void outputMemoryData(uint32 regData)
 {
     uint16 memoryBase = regData & 0xFFFF;
     uint16 memoryLimit = (regData >> MEMORY_LIMIT_SHIFT) & 0xFFFF;
-    printf("Memory base: %#x\n", memoryBase);
-    printf("Memory limit: %#x\n", memoryLimit);
+    fprintf(out, "Memory base: %#x\n", memoryBase);
+    fprintf(out, "Memory limit: %#x\n", memoryLimit);
 }
 
 char *getBaseClassData(uint8 baseClass)
@@ -236,6 +238,15 @@ char *getSRLProgrammingInterfaceData(uint8 srlProgrammingInterface)
         }
     }
     return NULL;
+}
+
+void outputExpansionROMBaseAddress(uint32 regData)
+{
+    if (regData & 1) {
+        fprintf(out, "Expansion ROM base address: %#x\n", regData >> EXPANSION_ROM_BASE_ADDRESS_SHIFT);
+    } else {
+        fprintf(out, "Expansion ROM base address: address space is disabled\n");
+    }
 }
 
 void outputInterruptPinData(uint32 regData)
