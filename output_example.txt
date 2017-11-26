@@ -1,0 +1,116 @@
+-------------------------
+0:0:0
+Vendor ID: 8086, Intel Corporation
+Device ID: 29A0, 82P965/G965 Memory Controller Hub
+Is bridge: no
+Interrupt pin: not used
+Interrupt line: IRQ0
+-------------------------
+0:1:0
+Vendor ID: 8086, Intel Corporation
+Device ID: 2981, 82G35 Express PCI Express Root Port
+Is bridge: yes
+Primary bus number: #60
+Secondary bus number: #70
+Subordinate bus number: #0
+-------------------------
+0:3:0
+Vendor ID: 1AB8, Parallels, Inc.
+Device ID: 4000, Virtual Machine Communication Interface
+Is bridge: no
+Interrupt pin: INTA#
+Interrupt line: IRQ11
+-------------------------
+0:5:0
+Vendor ID: 1AF4, Red Hat, Inc.
+Device ID: 1000, Virtio network device
+Is bridge: no
+Interrupt pin: INTA#
+Interrupt line: IRQ7
+-------------------------
+0:A:0
+Vendor ID: 1011, Digital Equipment Corporation
+Device ID: 0022, DECchip 21150
+Is bridge: yes
+Primary bus number: #90
+Secondary bus number: #A0
+Subordinate bus number: #80
+-------------------------
+0:E:0
+Vendor ID: 1AF4, Red Hat, Inc.
+Device ID: 1002, Virtio memory balloon
+Is bridge: no
+Interrupt pin: INTB#
+Interrupt line: IRQ11
+-------------------------
+0:1D:0
+Vendor ID: 8086, Intel Corporation
+Device ID: 2658, 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB UHCI #1
+Is bridge: no
+Interrupt pin: INTC#
+Interrupt line: IRQ9
+-------------------------
+0:1D:6
+Vendor ID: 1033, NEC Corporation
+Device ID: 0194, uPD720200 USB 3.0 Host Controller
+Is bridge: no
+Interrupt pin: INTA#
+Interrupt line: IRQ9
+-------------------------
+0:1D:7
+Vendor ID: 8086, Intel Corporation
+Device ID: 265C, 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB2 EHCI Controller
+Is bridge: no
+Interrupt pin: INTD#
+Interrupt line: IRQ9
+-------------------------
+0:1E:0
+Vendor ID: 8086, Intel Corporation
+Device ID: 244E, 82801 PCI Bridge
+Is bridge: yes
+Primary bus number: #C0
+Secondary bus number: #D0
+Subordinate bus number: #80
+-------------------------
+0:1F:0
+Vendor ID: 8086, Intel Corporation
+Device ID: 2810, 82801HB/HR (ICH8/R) LPC Interface Controller
+Is bridge: no
+Interrupt pin: not used
+Interrupt line: IRQ0
+-------------------------
+0:1F:1
+Vendor ID: 8086, Intel Corporation
+Device ID: 244B, 82801BA IDE U100 Controller
+Is bridge: no
+Interrupt pin: not used
+Interrupt line: IRQ0
+-------------------------
+0:1F:2
+Vendor ID: 8086, Intel Corporation
+Device ID: 2821, 82801HR/HO/HH (ICH8R/DO/DH) 6 port SATA Controller [AHCI mode]
+Is bridge: no
+Interrupt pin: INTA#
+Interrupt line: IRQ10
+-------------------------
+0:1F:3
+Vendor ID: 8086, Intel Corporation
+Device ID: 283E, 82801H (ICH8 Family) SMBus Controller
+Is bridge: no
+Interrupt pin: not used
+Interrupt line: IRQ0
+-------------------------
+0:1F:4
+Vendor ID: 8086, Intel Corporation
+Device ID: 2445, 82801BA/BAM AC'97 Audio Controller
+Is bridge: no
+Interrupt pin: INTB#
+Interrupt line: IRQ11
+-------------------------
+1:0:0
+Vendor ID: 1AB8, Parallels, Inc.
+Device ID: 4005, Accelerated Virtual Video Adapter
+Is bridge: no
+Interrupt pin: INTA#
+Interrupt line: IRQ10
+-------------------------
