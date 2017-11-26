@@ -17,11 +17,12 @@ void outputGeneralData(uint16 bus, uint16 device, uint16 function, uint32 regDat
 inline void outputVendorData(uint16 vendorID);
 inline void outputDeviceData(uint16 vendorID, uint16 deviceID);
 void outputClassCodeData(uint32 regData);
+void outputCacheLineSizeData(uint32 regData);
 void outputIOLimitBaseData(uint32 regData);
 void outputMemoryData(uint32 regData);
 void outputInterruptPinData(uint32 regData);
 void outputInterruptLineData(uint32 regData);
-inline void outputFullBusNumberData(uint32 regData);
+void outputFullBusNumberData(uint32 regData);
 inline void outputBusNumberData(char *infomsg, uint8 shift, uint32 regData);
 char *getVendorName(uint16 vendorID);
 char *getDeviceName(uint16 vendorID, uint16 deviceID);
@@ -101,6 +102,7 @@ void processDevice(uint16 bus, uint16 device, uint16 function)
         } else {
             fprintf(out, "\nIs bridge: no\n\n");
             outputClassCodeData(readRegister(bus, device, function, CLASS_CODE_REGISTER));
+            outputCacheLineSizeData(readRegister(bus, device, function, CACHE_LINE_SIZE_REGISTER));
         }
         outputInterruptPinData(readRegister(bus, device, function, INTERRUPT_PIN_REGISTER));
         outputInterruptLineData(readRegister(bus, device, function, INTERRUPT_LINE_REGISTER));
@@ -182,6 +184,12 @@ void outputClassCodeData(uint32 regData)
     fprintf(out, "Subclass: %#x %s\n", subclass, getSubclassData(subclass));
     fprintf(out, "Specific register level programming interface: %#x %s\n",
             srlProgrammingInterface, getSRLProgrammingInterfaceData(srlProgrammingInterface));
+}
+
+void outputCacheLineSizeData(uint32 regData)
+{
+    uint8 cacheLineSize = regData & 0xFF;
+    fprintf(out, "Cache line size: %d\n", cacheLineSize);
 }
 
 void outputIOLimitBaseData(uint32 regData)
