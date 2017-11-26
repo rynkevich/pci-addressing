@@ -17,6 +17,7 @@ void outputGeneralData(uint16 bus, uint16 device, uint16 function, uint32 regDat
 inline void outputVendorData(uint16 vendorID);
 inline void outputDeviceData(uint16 vendorID, uint16 deviceID);
 void outputClassCodeData(uint32 regData);
+void outputIORegisters(uint32 regData);
 void outputInterruptPinData(uint32 regData);
 void outputInterruptLineData(uint32 regData);
 inline void outputFullBusNumberData(uint32 regData);
@@ -94,6 +95,7 @@ void processDevice(uint16 bus, uint16 device, uint16 function)
             fprintf(out, "Is bridge: yes\n");
             outputClassCodeData(readRegister(bus, device, function, CLASS_CODE_REGISTER));
             outputFullBusNumberData(readRegister(bus, device, function, BUS_NUMBER_REGISTER));
+            outputIORegisters(readRegister(bus, device, function, IO_DATA_REGISTER));
         } else {
             fprintf(out, "Is bridge: no\n");
             outputClassCodeData(readRegister(bus, device, function, CLASS_CODE_REGISTER));
@@ -173,11 +175,19 @@ void outputClassCodeData(uint32 regData)
     uint8 subclass = (classCode >> SUBCLASS_SHIFT) & 0xFF;
     uint8 srlProgrammingInterface = classCode & 0xFF;
 
-    fprintf(out, "Class code: #%X\n", classCode);
-    fprintf(out, "Base class: #%X %s\n", baseClass, getBaseClassData(baseClass));
-    fprintf(out, "Subclass: #%X %s\n", subclass, getSubclassData(subclass));
-    fprintf(out, "Specific register level programming interface: #%X %s\n",
+    fprintf(out, "Class code: %#X\n", classCode);
+    fprintf(out, "Base class: %#X %s\n", baseClass, getBaseClassData(baseClass));
+    fprintf(out, "Subclass: %#X %s\n", subclass, getSubclassData(subclass));
+    fprintf(out, "Specific register level programming interface: %#X %s\n",
             srlProgrammingInterface, getSRLProgrammingInterfaceData(srlProgrammingInterface));
+}
+
+void outputIORegisters(uint32 regData)
+{
+    uint8 IOBase = regData & 0xFF;
+    uint8 IOLimit = (regData >> IO_LIMIT_SHIFT) & 0xFF;
+    printf("I/O Base: %#X\n", IOBase);
+    printf("I/O Limit: %#X\n", IOLimit);
 }
 
 char *getBaseClassData(uint8 baseClass)
