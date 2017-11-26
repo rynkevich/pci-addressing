@@ -11,17 +11,21 @@ int setOutput(int argc, char *argv[]);
 void closeOutput();
 void processDevice(uint16 bus, uint16 device, uint16 function);
 uint32 readRegister(uint16 bus, uint16 device, uint16 function, uint16 reg);
-inline void outputGeneralData(uint16 bus, uint16 device, uint16 function);
-inline void outputVendorData(uint16 vendorID);
-inline void outputDeviceData(uint16 vendorID, uint16 deviceID);
-char *getVendorName(uint16 vendorID);
-char *getDeviceName(uint16 vendorID, uint16 deviceID);
 inline bool isBridge(uint16 bus, uint16 device, uint16 function);
 uint8 getHeaderType(uint16 bus, uint16 device, uint16 function);
+void outputGeneralData(uint16 bus, uint16 device, uint16 function, uint32 regData);
+inline void outputVendorData(uint16 vendorID);
+inline void outputDeviceData(uint16 vendorID, uint16 deviceID);
+void outputClassCodeData(uint32 regData);
 void outputInterruptPinData(uint32 regData);
 void outputInterruptLineData(uint32 regData);
 inline void outputFullBusNumberData(uint32 regData);
 inline void outputBusNumberData(char *infomsg, uint8 shift, uint32 regData);
+char *getVendorName(uint16 vendorID);
+char *getDeviceName(uint16 vendorID, uint16 deviceID);
+char *getBaseClassData(uint8 baseClass);
+char *getSubclassData(uint8 subclass);
+char *getSRLProgrammingInterfaceData(uint8 SRLProgrammingInterface);
 
 FILE *out;
 
@@ -84,23 +88,18 @@ void processDevice(uint16 bus, uint16 device, uint16 function)
     uint32 idRegData = readRegister(bus, device, function, ID_REGISTER);
 
     if (idRegData != NO_DEVICE) {
-        uint16 deviceID = idRegData >> DEVICEID_SHIFT;
-        uint16 vendorID = idRegData & 0xFFFF;
-
-        outputGeneralData(bus, device, function);
-        outputVendorData(vendorID);
-        outputDeviceData(vendorID, deviceID);
+        outputGeneralData(bus, device, function, idRegData);
 
         if (isBridge(bus, device, function)) {
             fprintf(out, "Is bridge: yes\n");
-            uint32 busNumberRegData = readRegister(bus, device, function, BUS_NUMBER_REGISTER);
-            outputFullBusNumberData(busNumberRegData);
+            outputClassCodeData(readRegister(bus, device, function, CLASS_CODE_REGISTER));
+            outputFullBusNumberData(readRegister(bus, device, function, BUS_NUMBER_REGISTER));
         } else {
             fprintf(out, "Is bridge: no\n");
-            uint32 intPinLineRegData = readRegister(bus, device, function, INTERRUPT_PIN_LINE_REGISTER);
-            outputInterruptPinData(intPinLineRegData);
-            outputInterruptLineData(intPinLineRegData);
+            outputClassCodeData(readRegister(bus, device, function, CLASS_CODE_REGISTER));
         }
+        outputInterruptPinData(readRegister(bus, device, function, INTERRUPT_PIN_REGISTER));
+        outputInterruptLineData(readRegister(bus, device, function, INTERRUPT_LINE_REGISTER));
 
         fputs("-------------------------\n", out);
     }
@@ -114,21 +113,26 @@ uint32 readRegister(uint16 bus, uint16 device, uint16 function, uint16 reg)
     return inl(DATA_PORT);
 }
 
-void outputGeneralData(uint16 bus, uint16 device, uint16 function)
+void outputGeneralData(uint16 bus, uint16 device, uint16 function, uint32 regData)
 {
     fprintf(out, "%X:%X:%X\n", bus, device, function);
+
+    uint16 deviceID = regData >> DEVICEID_SHIFT;
+    uint16 vendorID = regData & 0xFFFF;
+    outputVendorData(vendorID);
+    outputDeviceData(vendorID, deviceID);
 }
 
 void outputVendorData(uint16 vendorID)
 {
     char *vendorName = getVendorName(vendorID);
-    fprintf(out, "Vendor ID: %04X, %s\n", vendorID, vendorName == NULL ? "unknown vendor" : vendorName);
+    fprintf(out, "Vendor ID: %04X, %s\n", vendorID, vendorName ? vendorName : "unknown vendor");
 }
 
 void outputDeviceData(uint16 vendorID, uint16 deviceID)
 {
     char *deviceName = getDeviceName(vendorID, deviceID);
-    fprintf(out, "Device ID: %04X, %s\n", deviceID, deviceName == NULL ? "unknown device" : deviceName);
+    fprintf(out, "Device ID: %04X, %s\n", deviceID, deviceName ? deviceName : "unknown device");
 }
 
 char *getVendorName(uint16 vendorID)
@@ -160,6 +164,50 @@ uint8 getHeaderType(uint16 bus, uint16 device, uint16 function)
 {
     uint32 htypeRegData = readRegister(bus, device, function, HEADER_TYPE_REGISTER);
     return (htypeRegData >> HEADER_TYPE_SHIFT) & 0xFF;
+}
+
+void outputClassCodeData(uint32 regData)
+{
+    uint32 classCode = (regData >> CLASS_CODE_SHIFT) & 0xFFFFFF;
+    uint8 baseClass = (classCode >> BASE_CLASS_SHIFT) & 0xFF;
+    uint8 subclass = (classCode >> SUBCLASS_SHIFT) & 0xFF;
+    uint8 srlProgrammingInterface = classCode & 0xFF;
+
+    fprintf(out, "Class code: #%X\n", classCode);
+    fprintf(out, "Base class: #%X %s\n", baseClass, getBaseClassData(baseClass));
+    fprintf(out, "Subclass: #%X %s\n", subclass, getSubclassData(subclass));
+    fprintf(out, "Specific register level programming interface: #%X %s\n",
+            srlProgrammingInterface, getSRLProgrammingInterfaceData(srlProgrammingInterface));
+}
+
+char *getBaseClassData(uint8 baseClass)
+{
+    for (int i = 0; i < PCI_CLASSCODETABLE_LEN; i++) {
+        if (PciClassCodeTable[i].BaseClass == baseClass) {
+            return PciClassCodeTable[i].BaseDesc;
+        }
+    }
+    return NULL;
+}
+
+char *getSubclassData(uint8 subclass)
+{
+    for (int i = 0; i < PCI_CLASSCODETABLE_LEN; i++) {
+        if (PciClassCodeTable[i].BaseClass == subclass) {
+            return PciClassCodeTable[i].SubDesc;
+        }
+    }
+    return NULL;
+}
+
+char *getSRLProgrammingInterfaceData(uint8 srlProgrammingInterface)
+{
+    for (int i = 0; i < PCI_CLASSCODETABLE_LEN; i++) {
+        if (PciClassCodeTable[i].ProgIf == srlProgrammingInterface) {
+            return PciClassCodeTable[i].ProgDesc;
+        }
+    }
+    return NULL;
 }
 
 void outputInterruptPinData(uint32 regData)
