@@ -18,13 +18,13 @@ inline void outputVendorData(uint16 vendorID);
 inline void outputDeviceData(uint16 vendorID, uint16 deviceID);
 void outputClassCodeData(uint32 regData);
 void outputCacheLineSizeData(uint32 regData);
+void outputFullBusNumberData(uint32 regData);
+inline void outputBusNumberData(char *infomsg, uint8 shift, uint32 regData);
 void outputIOLimitBaseData(uint32 regData);
 void outputMemoryData(uint32 regData);
 void outputExpansionROMBaseAddress(uint32 regData);
 void outputInterruptPinData(uint32 regData);
 void outputInterruptLineData(uint32 regData);
-void outputFullBusNumberData(uint32 regData);
-inline void outputBusNumberData(char *infomsg, uint8 shift, uint32 regData);
 char *getVendorName(uint16 vendorID);
 char *getDeviceName(uint16 vendorID, uint16 deviceID);
 char *getBaseClassData(uint8 baseClass);
@@ -121,6 +121,17 @@ uint32 readRegister(uint16 bus, uint16 device, uint16 function, uint16 reg)
     return inl(DATA_PORT);
 }
 
+bool isBridge(uint16 bus, uint16 device, uint16 function)
+{
+    return getHeaderType(bus, device, function) & 1;
+}
+
+uint8 getHeaderType(uint16 bus, uint16 device, uint16 function)
+{
+    uint32 htypeRegData = readRegister(bus, device, function, HEADER_TYPE_REGISTER);
+    return (htypeRegData >> HEADER_TYPE_SHIFT) & 0xFF;
+}
+
 void outputGeneralData(uint16 bus, uint16 device, uint16 function, uint32 regData)
 {
     fprintf(out, "%X:%X:%X\n", bus, device, function);
@@ -143,37 +154,6 @@ void outputDeviceData(uint16 vendorID, uint16 deviceID)
     fprintf(out, "Device ID: %04X, %s\n", deviceID, deviceName ? deviceName : "unknown device");
 }
 
-char *getVendorName(uint16 vendorID)
-{
-    for (int i = 0; i < PCI_VENTABLE_LEN; i++) {
-        if (PciVenTable[i].VendorId == vendorID) {
-            return PciVenTable[i].VendorName;
-        }
-    }
-    return NULL;
-}
-
-char *getDeviceName(uint16 vendorID, uint16 deviceID)
-{
-    for (int i = 0; i < PCI_DEVTABLE_LEN; i++) {
-        if (PciDevTable[i].VendorId == vendorID && PciDevTable[i].DeviceId == deviceID) {
-            return PciDevTable[i].DeviceName;
-        }
-    }
-    return NULL;
-}
-
-bool isBridge(uint16 bus, uint16 device, uint16 function)
-{
-    return getHeaderType(bus, device, function) & 1;
-}
-
-uint8 getHeaderType(uint16 bus, uint16 device, uint16 function)
-{
-    uint32 htypeRegData = readRegister(bus, device, function, HEADER_TYPE_REGISTER);
-    return (htypeRegData >> HEADER_TYPE_SHIFT) & 0xFF;
-}
-
 void outputClassCodeData(uint32 regData)
 {
     uint32 classCode = (regData >> CLASS_CODE_SHIFT) & 0xFFFFFF;
@@ -194,6 +174,19 @@ void outputCacheLineSizeData(uint32 regData)
     fprintf(out, "Cache line size: %d\n", cacheLineSize);
 }
 
+void outputFullBusNumberData(uint32 regData)
+{
+    outputBusNumberData(PRIMARY_BUS_NUMBER, PRIMARY_BUS_NUMBER_SHIFT, regData);
+    outputBusNumberData(SECONDARY_BUS_NUMBER, SECONDARY_BUS_NUMBER_SHIFT, regData);
+    outputBusNumberData(SUBORDINATE_BUS_NUMBER, SUBORDINATE_BUS_NUMBER_SHIFT, regData);
+}
+
+void outputBusNumberData(char *infomsg, uint8 shift, uint32 regData)
+{
+    uint8 busNumber = (regData >> shift) & 0xFF;
+    fprintf(out, infomsg, busNumber);
+}
+
 void outputIOLimitBaseData(uint32 regData)
 {
     uint8 IOBase = regData & 0xFF;
@@ -208,36 +201,6 @@ void outputMemoryData(uint32 regData)
     uint16 memoryLimit = (regData >> MEMORY_LIMIT_SHIFT) & 0xFFFF;
     fprintf(out, "Memory base: %#x\n", memoryBase);
     fprintf(out, "Memory limit: %#x\n", memoryLimit);
-}
-
-char *getBaseClassData(uint8 baseClass)
-{
-    for (int i = 0; i < PCI_CLASSCODETABLE_LEN; i++) {
-        if (PciClassCodeTable[i].BaseClass == baseClass) {
-            return PciClassCodeTable[i].BaseDesc;
-        }
-    }
-    return NULL;
-}
-
-char *getSubclassData(uint8 subclass)
-{
-    for (int i = 0; i < PCI_CLASSCODETABLE_LEN; i++) {
-        if (PciClassCodeTable[i].BaseClass == subclass) {
-            return PciClassCodeTable[i].SubDesc;
-        }
-    }
-    return NULL;
-}
-
-char *getSRLProgrammingInterfaceData(uint8 srlProgrammingInterface)
-{
-    for (int i = 0; i < PCI_CLASSCODETABLE_LEN; i++) {
-        if (PciClassCodeTable[i].ProgIf == srlProgrammingInterface) {
-            return PciClassCodeTable[i].ProgDesc;
-        }
-    }
-    return NULL;
 }
 
 void outputExpansionROMBaseAddress(uint32 regData)
@@ -292,15 +255,52 @@ void outputInterruptLineData(uint32 regData)
     }
 }
 
-void outputFullBusNumberData(uint32 regData)
+char *getVendorName(uint16 vendorID)
 {
-    outputBusNumberData(PRIMARY_BUS_NUMBER, PRIMARY_BUS_NUMBER_SHIFT, regData);
-    outputBusNumberData(SECONDARY_BUS_NUMBER, SECONDARY_BUS_NUMBER_SHIFT, regData);
-    outputBusNumberData(SUBORDINATE_BUS_NUMBER, SUBORDINATE_BUS_NUMBER_SHIFT, regData);
+    for (int i = 0; i < PCI_VENTABLE_LEN; i++) {
+        if (PciVenTable[i].VendorId == vendorID) {
+            return PciVenTable[i].VendorName;
+        }
+    }
+    return NULL;
 }
 
-void outputBusNumberData(char *infomsg, uint8 shift, uint32 regData)
+char *getDeviceName(uint16 vendorID, uint16 deviceID)
 {
-    uint8 busNumber = (regData >> shift) & 0xFF;
-    fprintf(out, infomsg, busNumber);
+    for (int i = 0; i < PCI_DEVTABLE_LEN; i++) {
+        if (PciDevTable[i].VendorId == vendorID && PciDevTable[i].DeviceId == deviceID) {
+            return PciDevTable[i].DeviceName;
+        }
+    }
+    return NULL;
+}
+
+char *getBaseClassData(uint8 baseClass)
+{
+    for (int i = 0; i < PCI_CLASSCODETABLE_LEN; i++) {
+        if (PciClassCodeTable[i].BaseClass == baseClass) {
+            return PciClassCodeTable[i].BaseDesc;
+        }
+    }
+    return NULL;
+}
+
+char *getSubclassData(uint8 subclass)
+{
+    for (int i = 0; i < PCI_CLASSCODETABLE_LEN; i++) {
+        if (PciClassCodeTable[i].BaseClass == subclass) {
+            return PciClassCodeTable[i].SubDesc;
+        }
+    }
+    return NULL;
+}
+
+char *getSRLProgrammingInterfaceData(uint8 srlProgrammingInterface)
+{
+    for (int i = 0; i < PCI_CLASSCODETABLE_LEN; i++) {
+        if (PciClassCodeTable[i].ProgIf == srlProgrammingInterface) {
+            return PciClassCodeTable[i].ProgDesc;
+        }
+    }
+    return NULL;
 }
