@@ -10,6 +10,13 @@ Base class: 0 Pre-2.0 PCI Specification Device
 Subclass: 0x6 Host/PCI
 Specific register level programming interface: 0 
 Cache line size: 0
+Base Address Registers:
+	Register #1: unused register
+	Register #2: unused register
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: unused register
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: not used
 Interrupt line: IRQ0
@@ -45,6 +52,14 @@ Base class: 0 Pre-2.0 PCI Specification Device
 Subclass: 0xff Device Does Not Fit In Class Codes
 Specific register level programming interface: 0 
 Cache line size: 0
+Base Address Registers:
+	Register #1: I/O space register
+		Address: 0x2000
+	Register #2: unused register
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: unused register
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: INTA#
 Interrupt line: IRQ11
@@ -60,6 +75,16 @@ Base class: 0 Pre-2.0 PCI Specification Device
 Subclass: 0x2 Ethernet
 Specific register level programming interface: 0 
 Cache line size: 0
+Base Address Registers:
+	Register #1: I/O space register
+		Address: 0x2080
+	Register #2: memory space register
+		Address range of memory block: any position in 32 bit address space
+		Address: 0xee00000
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: unused register
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: INTA#
 Interrupt line: IRQ7
@@ -95,6 +120,14 @@ Base class: 0 Pre-2.0 PCI Specification Device
 Subclass: 0x5 RAM
 Specific register level programming interface: 0 
 Cache line size: 0
+Base Address Registers:
+	Register #1: I/O space register
+		Address: 0x2c00
+	Register #2: unused register
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: unused register
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: INTB#
 Interrupt line: IRQ11
@@ -110,6 +143,14 @@ Base class: 0x3 Display Controller
 Subclass: 0xc Firewire (IEEE 1394)
 Specific register level programming interface: 0 
 Cache line size: 0
+Base Address Registers:
+	Register #1: unused register
+	Register #2: unused register
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: I/O space register
+		Address: 0x2c80
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: INTC#
 Interrupt line: IRQ9
@@ -125,6 +166,15 @@ Base class: 0x3 Display Controller
 Subclass: 0xc Firewire (IEEE 1394)
 Specific register level programming interface: 0x30 
 Cache line size: 0
+Base Address Registers:
+	Register #1: memory space register
+		Address range of memory block: any position in 32 bit address space
+		Address: 0xef10000
+	Register #2: unused register
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: unused register
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: INTA#
 Interrupt line: IRQ9
@@ -140,6 +190,15 @@ Base class: 0x3 Display Controller
 Subclass: 0xc Firewire (IEEE 1394)
 Specific register level programming interface: 0x20 
 Cache line size: 0
+Base Address Registers:
+	Register #1: memory space register
+		Address range of memory block: any position in 32 bit address space
+		Address: 0xef14000
+	Register #2: unused register
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: unused register
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: INTD#
 Interrupt line: IRQ9
@@ -175,6 +234,13 @@ Base class: 0x1 Mass Storage Controller
 Subclass: 0x6 Host/PCI
 Specific register level programming interface: 0 
 Cache line size: 0
+Base Address Registers:
+	Register #1: unused register
+	Register #2: unused register
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: unused register
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: not used
 Interrupt line: IRQ0
@@ -190,6 +256,14 @@ Base class: 0x1 Mass Storage Controller
 Subclass: 0x1 SCSI
 Specific register level programming interface: 0x80 (null)
 Cache line size: 0
+Base Address Registers:
+	Register #1: unused register
+	Register #2: unused register
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: I/O space register
+		Address: 0x3800
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: not used
 Interrupt line: IRQ0
@@ -205,6 +279,20 @@ Base class: 0x6 Bridge Device
 Subclass: 0x1 SCSI
 Specific register level programming interface: 0x1 8514
 Cache line size: 0
+Base Address Registers:
+	Register #1: I/O space register
+		Address: 0x3880
+	Register #2: I/O space register
+		Address: 0x3900
+	Register #3: I/O space register
+		Address: 0x3980
+	Register #4: I/O space register
+		Address: 0x3a00
+	Register #5: I/O space register
+		Address: 0x3a80
+	Register #6: memory space register
+		Address range of memory block: any position in 32 bit address space
+		Address: 0xf020000
 Expansion ROM base address: address space is disabled
 Interrupt pin: INTA#
 Interrupt line: IRQ10
@@ -220,6 +308,16 @@ Base class: 0x5 Memory Controller
 Subclass: 0xc Firewire (IEEE 1394)
 Specific register level programming interface: 0 
 Cache line size: 0
+Base Address Registers:
+	Register #1: memory space register
+		Address range of memory block: any position in 32 bit address space
+		Address: 0xf024000
+	Register #2: unused register
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: I/O space register
+		Address: 0x3b00
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: not used
 Interrupt line: IRQ0
@@ -235,6 +333,15 @@ Base class: 0x1 Mass Storage Controller
 Subclass: 0x4 Video
 Specific register level programming interface: 0 
 Cache line size: 0
+Base Address Registers:
+	Register #1: I/O space register
+		Address: 0x3b80
+	Register #2: I/O space register
+		Address: 0x3c00
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: unused register
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: INTB#
 Interrupt line: IRQ11
@@ -250,6 +357,16 @@ Base class: 0 Pre-2.0 PCI Specification Device
 Subclass: 0x3 PC Compatible
 Specific register level programming interface: 0 
 Cache line size: 0
+Base Address Registers:
+	Register #1: I/O space register
+		Address: 0x1800
+	Register #2: memory space register
+		Address range of memory block: any position in 32 bit address space
+		Address: 0xb000000
+	Register #3: unused register
+	Register #4: unused register
+	Register #5: unused register
+	Register #6: unused register
 Expansion ROM base address: address space is disabled
 Interrupt pin: INTA#
 Interrupt line: IRQ10
