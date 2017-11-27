@@ -22,6 +22,9 @@ void outputFullBusNumberData(uint32 regData);
 inline void outputBusNumberData(char *infomsg, uint8 shift, uint32 regData);
 void outputIOLimitBaseData(uint32 regData);
 void outputMemoryData(uint32 regData);
+void outputBARsData(uint16 bus, uint16 device, uint16 function);
+void outputIOMemorySpaceBARData(uint32 regData);
+void outputMemorySpaceBARData(uint32 regData);
 void outputExpansionROMBaseAddress(uint32 regData);
 void outputInterruptPinData(uint32 regData);
 void outputInterruptLineData(uint32 regData);
@@ -104,6 +107,7 @@ void processDevice(uint16 bus, uint16 device, uint16 function)
             fprintf(out, "\nIs bridge: no\n\n");
             outputClassCodeData(readRegister(bus, device, function, CLASS_CODE_REGISTER));
             outputCacheLineSizeData(readRegister(bus, device, function, CACHE_LINE_SIZE_REGISTER));
+            outputBARsData(bus, device, function);
             outputExpansionROMBaseAddress(readRegister(bus, device, function, EXPANSION_ROM_BASE_ADDRESS_REGISTER));
         }
         outputInterruptPinData(readRegister(bus, device, function, INTERRUPT_PIN_REGISTER));
@@ -203,12 +207,58 @@ void outputMemoryData(uint32 regData)
     fprintf(out, "Memory limit: %#x\n", memoryLimit);
 }
 
+void outputBARsData(uint16 bus, uint16 device, uint16 function)
+{
+    fputs("Base Address Registers:\n", out);
+    for (int i = 0; i < BAR_QUANTITY; i++) {
+        fprintf(out, "\tRegister #%d: ", i + 1);
+        uint32 regData = readRegister(bus, device, function, FIRST_BAR_REGISTER + i);
+        if (regData) {
+            if (regData & 1) {
+                outputIOMemorySpaceBARData(regData);
+            } else {
+                outputMemorySpaceBARData(regData);
+            }
+        } else {
+            fputs("unused register\n", out);
+        }
+    }
+}
+
+void outputMemorySpaceBARData(uint32 regData)
+{
+    fputs("memory space register\n", out);
+    uint8 typeBits = (regData >> TYPE_BITS_SHIFT) & 3;
+    fputs("\t\tAddress range of memory block: ", out);
+    switch (typeBits) {
+        case 0:
+            fputs("any position in 32 bit address space\n", out);
+            break;
+        case 1:
+            fputs("below 1MB\n", out);
+            break;
+        case 2:
+            fputs("any position in 64 bit address space\n", out);
+            break;
+        default:
+            fputs("-\n", out);
+            break;
+    }
+    fprintf(out, "\t\tAddress: %#x\n", regData >> MEMORY_SPACE_BAR_ADDRESS_SHIFT);
+}
+
+void outputIOMemorySpaceBARData(uint32 regData)
+{
+    fputs("I/O space register\n", out);
+    fprintf(out, "\t\tAddress: %#x\n", regData >> IO_MEMORY_SPACE_BAR_ADDRESS_SHIFT);
+}
+
 void outputExpansionROMBaseAddress(uint32 regData)
 {
     if (regData & 1) {
         fprintf(out, "Expansion ROM base address: %#x\n", regData >> EXPANSION_ROM_BASE_ADDRESS_SHIFT);
     } else {
-        fprintf(out, "Expansion ROM base address: address space is disabled\n");
+        fputs("Expansion ROM base address: address space is disabled\n", out);
     }
 }
 
@@ -245,13 +295,13 @@ void outputInterruptLineData(uint32 regData)
 {
     uint8 interruptLine = regData & 0xFF;
 
-    fprintf(out, "Interrupt line: ");
+    fputs("Interrupt line: ", out);
     if (interruptLine == 0xFF) {
-        fprintf(out, "unused/unknown input\n");
+        fputs("unused/unknown input\n", out);
     } else if (interruptLine < INTERRUPT_LINES_NUMBER) {
         fprintf(out, "%s%d\n", "IRQ", interruptLine);
     } else {
-        fprintf(out, "invalid line number\n");
+        fputs("invalid line number\n", out);
     }
 }
 
