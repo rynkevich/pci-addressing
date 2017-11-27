@@ -48,8 +48,7 @@ enum Error {E_INVALID_OPTION = 1, E_NO_ROOT_PRIVELEGES};
 #define INTERRUPT_LINES_NUMBER 16
 #define BAR_QUANTITY 6
 
-#define PRIMARY_BUS_NUMBER "Primary bus number: #%X\n"
-#define SECONDARY_BUS_NUMBER "Secondary bus number: #%X\n"
-#define SUBORDINATE_BUS_NUMBER "Subordinate bus number: #%X\n"
-
+#define PRIMARY_BUS_NUMBER "Primary bus number: %#x\n"
+#define SECONDARY_BUS_NUMBER "Secondary bus number: %#x\n"
+#define SUBORDINATE_BUS_NUMBER "Subordinate bus number: %#x\n"
 #define NO_DEVICE 0xFFFFFFFF
